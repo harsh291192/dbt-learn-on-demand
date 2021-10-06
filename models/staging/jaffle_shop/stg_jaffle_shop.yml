@@ -1,0 +1,41 @@
+version: 2
+
+
+models:
+    - name: stg_customers
+      description: This is a staged customer table from our jaffle shop app.
+      columns:
+        - name: customer_id
+          description: This column is primary key for customer table
+          tests:
+            - unique
+            - not_null
+
+
+
+    - name: stg_orders
+      description: This is a staged customer table from our jaffle shop app.
+      columns:
+        - name: status
+          description: "{{ doc('order_status') }}"
+          tests:
+            - not_null
+            - accepted_values:
+                values:
+                    - completed
+                    - shipped
+                    - returned
+                    - placed
+
+        - name: order_id
+          description: Primary key for orders.
+          tests:
+            - unique
+            - not_null
+
+        - name: customer_id
+          tests:
+            - relationships:
+                to: ref('stg_customers')
+                field: customer_id
+        
